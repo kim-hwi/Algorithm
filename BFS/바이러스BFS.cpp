@@ -17,29 +17,23 @@ int main (void){
         cin>>board[i][0]>>board[i][1];
         if(board[i][0]==1) {
             Q.push(pair<int,int>(board[i][0],board[i][1]));
-            //cout<<endl<<"push "<<board[i][0]<<" "<<board[i][1]<<endl;
         }
     }
     while(!Q.empty()){
         pair<int,int> cur=Q.front();
-        cout<<"inside queue1 "<<cur.first<<" "<<cur.second<<endl;
         Q.pop();
         com[cur.first-1]=true;
         com[cur.second-1]=true;
         for(int i=0;i<y;i++){
             if((board[i][1]==cur.first||board[i][0]==cur.first||board[i][1]==cur.second||board[i][0]==cur.second)&&(com[board[i][0]-1]==false||com[board[i][1]-1]==false)) {
+            //양방향 그래프이기 때문에 pair의 뒤쪽에서 연결될 때도 표현해 주어야 한다.
             Q.push(pair<int,int>(board[i][0],board[i][1]));
-            cout<<"push2 "<<board[i][0]<<" "<<board[i][1]<<endl;
             }
         }
     }
     int count=0;
     for(int i=0;i<x;i++){
         if(com[i]==true) count++;
-    }
-    cout<<endl;
-    for(int i=0;i<x;i++){
-        cout<<i<<" "<<com[i]<<endl;
     }
     cout<<count-1;
 }
