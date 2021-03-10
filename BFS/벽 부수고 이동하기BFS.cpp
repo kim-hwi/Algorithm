@@ -29,7 +29,7 @@ int main (void){
             int ny = cur.second + dy[dir];
             if(nx<0||nx>=n||ny<0||ny>=m) continue;
             if(dist[nx][ny]!=-1) continue;
-            if(board[nx][ny]=='1'&&dist[nx][ny]==-1){
+            if(board[nx][ny]=='1'&&dist[nx][ny]==-1){//BFS에서 처음 1을 만났을 때 값을 따로 큐에 저장-한번만 뚫을수 있는 벽들
                 Q2.push(pair<int,int>(nx,ny));
                 dist[nx][ny] = dist[cur.first][cur.second] + 1;
                 continue;
@@ -38,7 +38,7 @@ int main (void){
             Q.push(pair<int,int>(nx,ny));
         }
     }
-    while (!Q2.empty())
+    while (!Q2.empty())//한번만 뚫을 수 있는 벽들에서 BFS를 돌려 최단거리일 경우 업데이트함.
     {
         auto cur = Q2.front();
         Q2.pop();
@@ -64,11 +64,7 @@ int main (void){
     //     }
     // cout<<endl;
     // }
-    // while(!Q2.empty()){
-    //     cout << Q2.front().first << " " << Q2.front().second << endl;
-
-    //     Q2.pop();
-    // }
+    // dist 값 확인용 코드
     if (dist[n-1][m-1]==-1){
         cout<<-1;
         return 0;
