@@ -39,18 +39,7 @@ int main (void){
                 }
             }
         }
-        // for(int i = 0 ; i<l ; i++){
-        //     for(int j=0 ; j<l ; j++){
-        //         cout<<dist[i][j]<<" ";
-        //     }
-        //     cout<<endl;
-        // }
         res[test]=dist[goalX][goalY];
-
-
-
-
-
     }
     for(int i=0;i<testcace;i++){
         cout<<res[i]<<endl;
