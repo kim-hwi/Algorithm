@@ -38,13 +38,15 @@ int main(void){
             while(!Q.empty()){
                 pair<int,int> cur=Q.front(); Q.pop();
                 for(int j=0;j<connea;j++){
-                    if((cur.second==conn[j][0]||cur.second==conn[j][1])&&(vis[conn[j][0]] == false || vis[conn[j][1]] == false )){
+                    if ((cur.second == conn[j][0] || cur.second == conn[j][1] || cur.first == conn[j][0] || cur.first == conn[j][1]) && (vis[conn[j][0]] == false || vis[conn[j][1]] == false))
+                    {//cur.second만 하게되면 뒷부분에서 연결된 페어는 인식하지 못한다.
                         Q.push(pair<int,int>(conn[j][0],conn[j][1]));
                         vis[cur.second]=1;
                         vis[conn[j][0]]=1;
                         vis[conn[j][1]]=1;
+                        //시작점을 정하면 시작점과 연결된 모든 점을 방문한다.
                         //cout<<"inside i= "<<i<<" cur.secound= "<<cur.second<<" "<<conn[j][0]<<" "<<conn[j][1]<<" ea "<<ea<<endl;
-                        inside=true;
+                        inside=true;//플래그를 설치해서 bfs를 돌때만 연결개수를 센다.
                     }
                 }
             }
@@ -59,5 +61,10 @@ int main(void){
     // for(int i=0;i<connea;i++){
     //     cout<<conn[i][0]<<" "<<conn[i][1]<<endl;
     // }
+    //cout<<endl;
+    for(int i=1;i<comea+1;i++){
+        if(vis[i]==0) ea++;
+        //꼭 연결되어 있지 않은 점들을 세주어야한다.
+    }
     cout<<ea;
 }
