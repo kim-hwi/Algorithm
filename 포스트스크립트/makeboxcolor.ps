@@ -1,0 +1,36 @@
+%!
+%% x_pos, y_pos
+/box{
+    moveto
+    30 0 rlineto
+    0 30 rlineto
+    -30 0 rlineto
+    closepath
+    2 setlinewidth
+}def
+
+/box2{
+    moveto
+    30 0 rlineto
+    0 30 rlineto
+    -30 0 rlineto
+    closepath
+    2 setlinewidth
+}def
+
+1 1 45 { /i exch def
+    i 21 gt{ 
+        305 i 3 mul sub 100 i 5 mul add box
+        370 i 3 mul sub 100 i 5 mul add box
+        370 i 3 mul sub 200 i 5 mul add box
+        430 i 3 mul sub 200 i 5 mul add box}
+    {
+        170 i 3 mul add 320 i 5 mul add box2
+        300 i 3 mul add 210 i 5 mul add box2
+    } ifelse
+    i 5 mod 1 eq{ 0.2 i 45 div i 45 div setrgbcolor}
+    {0.8 0.8 0 setrgbcolor}
+    ifelse
+    stroke
+}for
+showpage
