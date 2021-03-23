@@ -7,6 +7,7 @@ int main (void){
     int comEA,connet,start;
     cin>>comEA>>connet>>start;
     int board[connet][2];
+
     bool vis[comEA];
     for(int i = 0 ; i < connet ; i++){
         int x,y;
@@ -77,68 +78,93 @@ int main (void){
         }
         gap /= 2;
     }
+    
+    //dfs 시작
+    stack<pair<int,int> > S;
+    stack<int> S1;
+    vis[start - 1] = true;
+    cout<<start<<" ";
+    for(int i = connet-1 ; i >= 0 ; i-- ){//스텍 구조이기 때문에 반복문을 거꾸로 해야 제일 작은점부터 방문이 가능하다.
+        if (board[i][0] == start || board[i][1] == start){
+            if (board[i][0] == start)
+            {
+                S1.push(board[i][0]);
+            }
+
+            if (board[i][1] == start)
+            {
+                S1.push(board[i][1]);
+            }
+        }
+        
+    }
+    while(!S1.empty()){
+        int cur = S1.top();
+        S1.pop();
+        if(vis[cur-1]==false) cout<<cur<<" ";
+        vis[cur-1]=1;
+        for (int i = connet - 1; i >= 0; i--)
+        {
+            if ((board[i][0] == cur && vis[board[i][1] - 1] == false) || (board[i][1] == cur) && (vis[board[i][0] - 1] == false ) )
+            {
+                if (board[i][0] == cur)
+                {
+                    S1.push(board[i][1]);
+                }
+
+                else if (board[i][1] == cur)
+                {
+                    S1.push(board[i][0]);
+                }
+            }
+        }
+    }
+
+
     cout<<endl;
-    // for(int i = 0 ; i < connet ; i++){
-    //     cout<<board[i][0]<<" "<<board[i][1]<<endl;
-    // }
+    
+    //bfs 시작
+    for (int i = 0; i < comEA; i++)vis[i] = false;
+    
     queue<pair<int,int> > Q;
     vis[start - 1] = true;
-    cout<<start<<endl;
-    for (int i = 0; i < comEA; i++)
+    cout<<start<<" ";
+    for (int i = 0; i < connet; i++)
     {
         if (board[i][0] == start || board[i][1] == start){
             if(board[i][0]==0 || board[i][1]==0) continue;
             Q.push(pair<int, int>(board[i][0], board[i][1]));
             if (vis[board[i][0] - 1] == false){
-                cout << board[i][0] << endl;
+                cout << board[i][0] << " ";
                 vis[board[i][0] - 1] = 1;
             }
                 
-                //cout << board[i][0] << endl;
             if (vis[board[i][1] - 1] == false){
-                cout <<board[i][1]<< endl;
+                cout <<board[i][1]<< " ";
                 vis[board[i][1] - 1] = 1;
             }
-            //cout<<"?"<<endl;      
-            //cout << board[i][1] << endl;
         }
     }
-    //cout<<endl;
     while(!Q.empty()){
         
         pair<int, int> cur = Q.front();
         Q.pop();
-        //cout<<"cur"<<cur.first<<" "<<cur.second<<endl;
-        //if (vis[cur.first - 1] == 1 && vis[cur.second - 1] == 1) continue;
-        
-        // if (vis[cur.first - 1] == false){
-        //     cout << cur.first << endl;
-        //     vis[board[i][0] - 1] = true;
-        // }  
-        // if (vis[cur.second - 1] == false){
-        //     cout << cur.second << endl;
-        //     vis[board[i][1] - 1] = true;
-        // }
-        
-        //cout<<endl;
+
         for (int i = 0; i < connet; i++)
-        {
-            //cout << board[i][0] <<" cur.f "<<cur.first<< "  " << board[i][1] <<" cur.s "<<cur.second<< "   " << vis[board[i][0] - 1] << " " << vis[board[i][1]- 1] << endl;
+        {            
             if (((board[i][0] == cur.first || board[i][0] == cur.second) && (vis[board[i][1] - 1] == false || vis[board[i][0] - 1] == false)) || ((board[i][1] == cur.first || board[i][1] == cur.second) && (vis[board[i][1] - 1] == false || vis[board[i][0] - 1] == false)))
             {
-                //cout << "?" << endl;
                 Q.push(pair<int, int>(board[i][0], board[i][1]));
                 
                 if (vis[board[i][0] - 1] == false)
                 {
-                    cout << board[i][0] << endl;
+                    cout << board[i][0] << " ";
                     vis[board[i][0] - 1] = true;
                 }
 
                 if (vis[board[i][1] - 1] == false)
                 {
-                    //cout << board[i][0] << " " << board[i][1] << " " << vis[cur.first - 1] << " " << vis[cur.second - 1] << endl;
-                    cout << board[i][1] << endl;
+                    cout << board[i][1] << " ";
                     vis[board[i][1] - 1] = true;
                 }
                 
@@ -149,5 +175,5 @@ int main (void){
         vis[cur.first - 1] = 1;
         vis[cur.second - 1] = 1;
     }
-    
+    cout<<endl;
 }
