@@ -2,7 +2,7 @@
 using namespace std;
 int main (void){
     int x,y,stx,sty,nowx,nowy,base,right,left,up,down,top,insnum,temp;
-    cin>>y>>x>>sty>>stx>>insnum;
+    cin>>x>>y>>stx>>sty>>insnum;
     int board[x][y];
     int ins[insnum];
     int dise[6];
@@ -12,7 +12,9 @@ int main (void){
         for ( int j = 0 ; j < y ; j++ )
         {
             cin>>board[i][j];
+            cout<<board[i][j]<<" ";
         }
+        cout<<endl;
     }
     for ( int i = 0 ; i < insnum ; i++) cin>>ins[i];
     dise[5]=board[stx][sty];
@@ -24,19 +26,19 @@ int main (void){
     up=1;
     down=4;
     top=0;
-    cout<<0<<" ";
+    //cout<<0<<" ";
     for ( int i = 0 ; i < insnum ; i++)
     {
-        //cout << "!! "<<i<<" "<<base << " " << endl;
+       //cout << "!! "<<i<<" "<<ins[i] << " " << endl;
         if(ins[i] == 1)
         {
             
-            if (nowx + 1 > x) {
-                cout<<nowx<<" "<<x<<endl;
+            if (nowy + 1 > y) {
+                //cout<<nowy<<" "<<y<<endl;
                 continue;
                 
             }
-            nowx++;
+            nowy++;
 
             for(int j = 0 ; j < 6 ; j ++){
                 
@@ -58,7 +60,7 @@ int main (void){
                     }
                     cout<<dise[top]<<" "; 
                     //cout<<top<<endl;
-                    continue;
+                    break;
                 }
             }    
         }
@@ -66,12 +68,13 @@ int main (void){
         if (ins[i] == 2)
         {
             //cout<<"nowx "<<nowx<<endl;;
-            if (nowx - 1 < 0)
-            {   
+            if (nowy - 1 < 0)
+            {
+                //cout << " nowy - 1 < 0 " << nowy << endl;
                 continue;
 
             }
-            nowx--;
+            nowy--;
             for (int j = 0; j < 6; j++)
             {
                 if (base == j)
@@ -98,11 +101,12 @@ int main (void){
 
         if (ins[i] == 3)
         {
-            if (nowy - 1 < 0)
+            if (nowx - 1 < 0)
             {
+                //cout << " nowx - 1 < 0 " << nowx << endl;
                 continue;
             }
-            nowy--;
+            nowx--;
             for (int j = 0; j < 6; j++)
             {
                 if (base == j)
@@ -129,11 +133,13 @@ int main (void){
 
         if (ins[i] == 4)
         {
-            if (nowy + 1 > y)
+            //cout<<"base"<<base;
+            if (nowx + 1 > x)
             {
+                //cout << " nowx + 1 > x " << nowx << " " <<x << endl;
                 continue;
             }
-            nowy++;
+            nowx++;
             for (int j = 0; j < 6; j++)
             {
                 if (base == j)
@@ -146,6 +152,7 @@ int main (void){
                     if (board[nowx][nowy] != 0)
                     {
                         dise[base] = board[nowx][nowy];
+                        //cout << " base " << dise[base] << " nowx " << nowx << " nowy " << nowy << " board[][] " << board[nowx][nowy]<<endl; 
                         board[nowx][nowy] = 0;
                     }
                     else
@@ -153,6 +160,8 @@ int main (void){
                         board[nowx][nowy] = dise[base];
                     }
                     cout << dise[top] << " ";
+                    //cout << "res "<<dise[top] << " base " << dise[base] <<" down "<< dise[down]<<" up "<<dise[up]<<endl;
+
                     break;
                 }
             }
