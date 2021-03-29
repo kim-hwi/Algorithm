@@ -2,7 +2,7 @@
 using namespace std;
 int main (void){
     int x,y,stx,sty,nowx,nowy,base,right,left,up,down,top,insnum,temp;
-    cin>>x>>y>>stx>>sty>>insnum;
+    cin>>x>>y>>stx>>sty>>insnum;//입력을 받는다. x는 상하, y는 좌우 에 유의할것. 
     int board[x][y];
     int ins[insnum];
     int dise[6];
@@ -12,54 +12,46 @@ int main (void){
         for ( int j = 0 ; j < y ; j++ )
         {
             cin>>board[i][j];
-            cout<<board[i][j]<<" ";
         }
-        cout<<endl;
     }
     for ( int i = 0 ; i < insnum ; i++) cin>>ins[i];
-    dise[5]=board[stx][sty];
-    nowx=stx;
+    dise[5]=board[stx][sty];//주사위 생성
+    nowx=stx;//증가시킬 보드위의 인덱스
     nowy=sty;
-    base=5;
+    base=5;//초기상태의 주사위 값 설정
     right=2;
     left=3;
     up=1;
     down=4;
     top=0;
-    //cout<<0<<" ";
-    for ( int i = 0 ; i < insnum ; i++)
+    for ( int i = 0 ; i < insnum ; i++)//명령어 개수만큼 반복
     {
-       //cout << "!! "<<i<<" "<<ins[i] << " " << endl;
-        if(ins[i] == 1)
+        if(ins[i] == 1)//명령어가 1 => 오른쪽으로 굴릴 때
         {
-            
-            if (nowy + 1 > y) {
-                //cout<<nowy<<" "<<y<<endl;
+            if (nowy + 1 == y) {//한계값을 넘어갈때
                 continue;
-                
             }
             nowy++;
 
-            for(int j = 0 ; j < 6 ; j ++){
+            for(int j = 0 ; j < 6 ; j ++){//현재의 주사위 상태 체크, 한번만 발동되면 break로 정지할 것
                 
                 if(base == j)
                 {
-                    temp = base;
+                    temp = base;//주사위가 굴러가며 값이 바뀜.
                     base = right;
                     right = top;
                     top = left;
                     left = temp;
-                    if(board[nowx][nowy]!=0)
+                    if(board[nowx][nowy]!=0)//문제의 조건문
                     {
                         dise[base] = board[nowx][nowy];
                         board[nowx][nowy]=0;
                     }
-                    else
+                    else//문제의 조건문
                     {
                         board[nowx][nowy] = dise[base];
                     }
-                    cout<<dise[top]<<" "; 
-                    //cout<<top<<endl;
+                    cout<<dise[top]<<endl; 
                     break;
                 }
             }    
@@ -67,12 +59,9 @@ int main (void){
 
         if (ins[i] == 2)
         {
-            //cout<<"nowx "<<nowx<<endl;;
             if (nowy - 1 < 0)
             {
-                //cout << " nowy - 1 < 0 " << nowy << endl;
                 continue;
-
             }
             nowy--;
             for (int j = 0; j < 6; j++)
@@ -93,7 +82,7 @@ int main (void){
                     {
                         board[nowx][nowy] = dise[base];
                     }
-                    cout << dise[top] << " ";
+                    cout << dise[top] <<endl;
                     break;
                 }
             }
@@ -103,7 +92,6 @@ int main (void){
         {
             if (nowx - 1 < 0)
             {
-                //cout << " nowx - 1 < 0 " << nowx << endl;
                 continue;
             }
             nowx--;
@@ -125,7 +113,7 @@ int main (void){
                     {
                         board[nowx][nowy] = dise[base];
                     }
-                    cout << dise[top] << " ";
+                    cout << dise[top] <<endl;
                     break;
                 }
             }
@@ -133,10 +121,8 @@ int main (void){
 
         if (ins[i] == 4)
         {
-            //cout<<"base"<<base;
-            if (nowx + 1 > x)
+            if (nowx + 1 == x)
             {
-                //cout << " nowx + 1 > x " << nowx << " " <<x << endl;
                 continue;
             }
             nowx++;
@@ -151,153 +137,17 @@ int main (void){
                     up = temp;
                     if (board[nowx][nowy] != 0)
                     {
-                        dise[base] = board[nowx][nowy];
-                        //cout << " base " << dise[base] << " nowx " << nowx << " nowy " << nowy << " board[][] " << board[nowx][nowy]<<endl; 
+                        dise[base] = board[nowx][nowy];   
                         board[nowx][nowy] = 0;
                     }
                     else
                     {
                         board[nowx][nowy] = dise[base];
                     }
-                    cout << dise[top] << " ";
-                    //cout << "res "<<dise[top] << " base " << dise[base] <<" down "<< dise[down]<<" up "<<dise[up]<<endl;
-
+                    cout << dise[top] <<endl;
                     break;
                 }
             }
         }
-
-        
-
-            // if (base == 5){
-            //     base = 2;
-                
-
-
-                // if (board[nowx + 1][nowy] != 0)
-                // {
-                //     dise[base] = board[nowx + 1][nowy];
-                //     board[nowx + 1][nowy] = 0;
-                // }
-                
-                // else
-                // {
-                //     board[nowx + 1][nowy] = dise[base];
-                    //cout << dise[5 - base] << endl;
-                //}
-            //}
-
-            // else if (base == 4)
-            // {
-            //     base = 2;
-            //     if (board[nowx + 1][nowy] != 0)
-            //     {
-            //         dise[base] = board[nowx + 1][nowy];
-            //         board[nowx + 1][nowy] = 0;
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-
-            //     else
-            //     {
-            //         board[nowx + 1][nowy] = dise[base];
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-            // }
-
-            // else if (base == 3)
-            // {
-            //     base = 0;
-            //     if (board[nowx + 1][nowy] != 0)
-            //     {
-            //         dise[base] = board[nowx + 1][nowy];
-            //         board[nowx + 1][nowy] = 0;
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-
-            //     else
-            //     {
-            //         board[nowx + 1][nowy] = dise[base];
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-            // }
-
-            // else if (base == 2)
-            // {
-            //     base = 5;
-            //     if (board[nowx + 1][nowy] != 0)
-            //     {
-            //         dise[base] = board[nowx + 1][nowy];
-            //         board[nowx + 1][nowy] = 0;
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-
-            //     else
-            //     {
-            //         board[nowx + 1][nowy] = dise[base];
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-            // }
-
-            // else if (base == 1)
-            // {
-            //     base = 2;
-            //     if (board[nowx + 1][nowy] != 0)
-            //     {
-            //         dise[base] = board[nowx + 1][nowy];
-            //         board[nowx + 1][nowy] = 0;
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-
-            //     else
-            //     {
-            //         board[nowx + 1][nowy] = dise[base];
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-            // }
-
-            // else if (base == 0)
-            // {
-            //     base = 2;
-            //     if (board[nowx + 1][nowy] != 0)
-            //     {
-            //         dise[base] = board[nowx + 1][nowy];
-            //         board[nowx + 1][nowy] = 0;
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-
-            //     else
-            //     {
-            //         board[nowx + 1][nowy] = dise[base];
-            //         //cout << dise[5 - base] << endl;
-            //         cout << 5 - base << " " << dise[5 - base] << endl;
-            //     }
-            // }
-
-        //}
-        // if (ins[i] == 2)
-        // {
-        //     if (nowy - 1 < 0)
-        //         continue;
-        // }
-        // if (ins[i] == 3)
-        // {
-        //     if (nowy - 1 < 0)
-        //         continue;
-        // }
-        // if (ins[i] == 4)
-        // {
-        //     if (nowy + 1 >= y)
-        //         continue;
-        // }
-
     }
 }
