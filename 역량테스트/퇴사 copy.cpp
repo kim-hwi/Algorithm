@@ -60,6 +60,10 @@ int main (void){
             break;
         }
     }
+
+    //double res[]
+
+
     int resdata[newnum][3];
     // cout<<"newdata"<<endl;
     // for (int i = 0; i < newnum; i++)
