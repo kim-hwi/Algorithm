@@ -1,0 +1,40 @@
+%!
+
+/bol{
+    moveto
+    3 3 rlineto
+    3 -3 rlineto
+    -3 3 rlineto
+    closepath
+    2 setlinewidth
+
+}def
+
+/card{
+    0 0 moveto
+    255.1165 0 rlineto
+    0 141.1731 rlineto
+    -255.1165 0 rlineto
+    closepath
+    1 setlinewidth
+
+
+}def
+
+1 1 45 { /i exch def
+    i 21 gt{ 
+        305 i 3 mul sub 100 i 5 mul add bol
+        370 i 3 mul sub 100 i 5 mul add bol
+        370 i 3 mul sub 200 i 5 mul add bol
+        430 i 3 mul sub 200 i 5 mul add bol}
+    {
+        170 i 3 mul add 320 i 5 mul add bol
+        300 i 3 mul add 210 i 5 mul add bol
+    } ifelse
+    i 5 mod 1 eq{ 0.2 i 45 div i 45 div setrgbcolor}
+    {0.8 0.8 0 setrgbcolor}
+    ifelse
+    
+card
+stroke
+showpage

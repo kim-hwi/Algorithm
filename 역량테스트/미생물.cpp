@@ -62,7 +62,7 @@ int main(int argc, char **argv)
             cin>>bio[i][0]>>bio[i][1]>>bio[i][2]>>bio[i][3];
             //vis[bio[i][0]-1][bio[i][1]-1][]=-1;
         }
-        for(int t = 1 ; t <= time ; t++){
+        for(int t = 0 ; t < time ; t++){
             for(int i = 0 ; i < gunea ; i++)
             {
                 vis[bio[i][0] - 1][bio[i][1] - 1][0] = -1;
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
                 if (bio[i][3] == 3) bio[i][1]--;
                 if (bio[i][3] == 4) bio[i][1]++;
 
-                if (vis[bio[i][0]][bio[i][1]][0]==t){
+                if (vis[bio[i][0]-1][bio[i][1]-1][0]==t){
                     cout << bio[i][0] << " " << bio[i][1] << " " << vis[bio[i][0] - 1][bio[i][1] - 1][0] <<endl;
                     if (    bio[i][2] < bio[vis[bio[i][0] - 1][bio[i][1] - 1][1]][2] )
                     {
