@@ -2,99 +2,173 @@ MAIN	START	1000
 
 	JSUB	SCAN1
 
-	
 
 ALG	LDX	#1
-	LDCH	DATA,X
-	STA	TMP
-	TIX	CASE
+	LDA	#0
+	STX	FIRST	.first에 초기값 설정
+	LDCH	DATA,X	.data 의 첫번째 값
+	STA	TMP	.첫번째 값을 tmp에 넣음.
+	STX	TMP2
+	LDA	TMP2
+	COMP	CASE
 	JEQ	PRINT .다음재귀 가는것도 생각
-	LDA	#1
-	STA	NOWCOL
-	STA	NOWMAT
-	J	ALG2
-
-ALG1	+JSUB	POP .여기서도 nowcol,nowmat 초기화
-	LDA	#1
-	STA	NOWCOL
-	STA	NOWMAT
-	LDCH	DATA,X
-	STA	TMP
-	TIX	CASE
-
-ALG2	LDA	NOWMAT
-	COMP	MATLM
-	JEQ	QUIT
-
-	LDA	NOWCOL
-	COMP	COLLM
-	JEQ	PLUSE .다음줄로 넘어가기 위함
-
-REPLUSE	LDA	NOWCOL
-	ADD	#1
-	STA	NOWCOL
-	LDA	NOWMAT
-	ADD	#1
-	LDA	NOWMAT
-
-	LDCH	DATA,X
-	TIX	CASE
-
-	COMP	TMP
-	STA	TMP
-	JEQ	ALG2
+	TIX	CASE	.case와 같다면 끝
 	
-	LDA	MATLM
-	+JSUB	PUSH
+	LDA	#1	.a에 1을 넣음
+	STA	NOWCOL	.nowcol초기화
+	STA	NOWMAT	.nowmat초기화
+	J	ALG2	.alg2로
+
+ALG1	+JSUB	POP1	.pop로 괄호나 숫자를 x레지스터에 넣음
+	LDX	TMP2	.x에 스텍상위값을 넣음
+	LDA	TMP2	.a에 스텍상위값을 넣음
+	COMP	STG	.스텍의 다음차례가 괄호와 같으면 프린트 후 다시 alg1로 가 pop 
+	JEQ	PRINT1	
+	COMP	FIG
+	JEQ	PRINT1
+	STA	FIRST	.first에 스텍상위값 넣음
+	
+	+JSUB	POP2	.collm, matlm 가져오기
+	LDA	TMP2
+	STA	COLLM
+	+JSUB	POP2
+	LDA	TMP2
+	STA	MATLM 
+	
+	STX	FIRST
+	LDA	#1
+	STA	NOWCOL	.owcol,nowmat 초기화
+	STA	NOWMAT
+	LDCH	DATA,X
+	STA	TMP
+	TIX	CASE
+
+ALG2	LDA	NOWMAT	.nowmat을 a에 넣음
+	COMP	MATLM	.matlm과 비교
+	JEQ	QUIT	.같다면 quit로
+
+	LDA	COLLM 
+	COMP	#1	.collm이 1이되면 재귀 종료/////
+	JEQ	ALG1	
+
+	LDA	NOWCOL	.nowcol을 a에 넣음
+	COMP	COLLM	.collm과 비교
+	JEQ	PLUSE 	.같다면 배열의 다음줄로 넘어가기 위해 pluse로 이동
+
+
+
+REPLUSE	LDA	NOWMAT	.a에 nowmat를 넣음
+	COMP	MATLM	.해당 행렬을 전부 돌았을 경우
+	JEQ	PRINT3	.print2로 이동
+	ADD	#1	.1을 더함
+	STA	NOWMAT	.nowmat에 저장
+	LDA	NOWCOL	.a에 nowcol을 넣음
+	ADD	#1	.1을 더함
+	STA	NOWCOL	.nowcol에 저징
+	
+
+	LDCH	DATA,X	.data의 x를 읽어옴
+	TIX	CASE	.x+1
+
+	COMP	TMP	.tmp와 data x를 비교
+	STA	TMP	.지금의 값 tmp에 넣기
+	JEQ	ALG2	.같다면 alg2로 가서 반복.
+
+	
+	
+	LDCH	STG
+	JSUB	PRINT1	.재귀발생시 '('출력
+	
+	LDCH	FIG	.스텍에 ')' push
+	+JSUB	PUSH1	
+	
 	LDA	COLLM
-	+JSUB	PUSH
-	+JSUB	ALG1
+	DIV	#2
+	STA	TMP2
+	MUL	COL
+	ADD	FIRST
+	ADD	TMP2
+	STA	FOUR
+	+JSUB	PUSH1	.스텍에 네번째 값
+
+	LDA	TMP2
+	MUL	COL
+	ADD	FIRST
+	STA	THREE
+	+JSUB	PUSH1	.스텍에 세번째 값
+
+	LDA	COLLM
+	DIV	#2
+	ADD	FIRST
+	STA	SECOND
+	+JSUB	PUSH1	.스텍에 두번째 값
+
+	LDA	FIRST	
+	+JSUB	PUSH1	.스텍에 첫번째 값
+
+	.LDA	STG	.스텍에 ) push
+	.+JSUB	PUSH1	
+
+
+	LDA	MATLM	
+	+JSUB	PUSH2	.스텍에 matlm 추가
+	LDA	COLLM
+	+JSUB	PUSH2	.스텍에 collm추가
+	LDA	MATLM	
+	+JSUB	PUSH2	.스텍에 matlm 추가
+	LDA	COLLM
+	+JSUB	PUSH2	.스텍에 collm추가
+	LDA	MATLM	
+	+JSUB	PUSH2	.스텍에 matlm 추가
+	LDA	COLLM
+	+JSUB	PUSH2	.스텍에 collm추가
+	LDA	MATLM	
+	+JSUB	PUSH2	.스텍에 matlm 추가
+	LDA	COLLM
+	+JSUB	PUSH2	.스텍에 collm추가
+
+	J	ALG1	.리컬시브
 
 
 
 
-QUIT	RSUB
-
-PLUSE	STX	XTMP
-	LDA	COL
-	SUB	#1
-	ADD	XTMP
-	STA	XTMP
-	LDX	XTMP
-	J	REPLUSE
-
-
-
-
-
-LOOP	COMP	#1
-	JEQ	EXIT
-	STA	TMPNUM
-	STL	TMPL
-
-
-
-
-	+JSUB	PUSH
-	LDA	TMPL
-	+JSUB	PUSH
-	LDA	TMPNUM
-	
-	JSUB	LOOP
-
-	+JSUB	POP
-	STA	TMPL
-	JSUB	POP
-
-	+JSUB	PRINT
-	LDL	TMPL
+QUIT	JSUB	PRINT
 	RSUB
 
+PLUSE	STA	XTMP	.x값 xtmp에 저장
+	LDA	COL	.a에 col 저장
+	SUB	#1	.1빼줌
+	ADD	XTMP	.col-1+xtmp
+	STA	XTMP	.입력
+	LDX	XTMP	.다시 x에 저장
+	LDA	#0
+	STA	NOWCOL
+	J	REPLUSE	.회귀
 
 PRINT	TD	OUTDEV
 	JEQ	PRINT
-	LDCH	DATA
+	LDA	TMP
+	ADD	#48
 	WD	OUTDEV
+	J	FIN
+
+PRINT1	TD	OUTDEV
+	JEQ	PRINT
+	WD	OUTDEV
+	RSUB
+
+PRINT2	TD	OUTDEV
+	JEQ	PRINT
+	LDA	FIG
+	WD	OUTDEV
+	RSUB
+
+PRINT3	TD	OUTDEV
+	JEQ	PRINT
+	LDA	TMP
+	ADD	#48
+	WD	OUTDEV
+	J	ALG1
 
 
 SCAN1	TD	INDEV
@@ -126,16 +200,55 @@ SCAN2	LDA	#0
 	JLT	SCAN2
 	JEQ 	SCAN2
 	COMP	ASEN
+
+	LDA	#STACK1
+	STA	POINTER1
+	LDA	#STACK2
+	STA	POINTER2
+	
 	RSUB
 	
-PUSH	STA	NOW
+PUSH1	STCH	@POINTER1
+	LDA	POINTER1
+	ADD	#1
+	STA	POINTER1
+	LDA	#0
+	RSUB
 
+PUSH2	STCH	@POINTER2
+	LDA	POINTER2
+	ADD	#1
+	STA	POINTER2
+	LDA	#0
+	RSUB
+
+POP1	LDA	POINTER1	
+	SUB	#1		.스텍포인터 다운
+	STA	POINTER1
+	LDA	#0
+	LDCH	@POINTER1	.a에 스텍상위값 넣음
+	STA	TMP2		.그 값을 tmp2에 넣음
+	LDX	TMP2		.그 값을 x에 넣음
+	LDA	#0
+	STA	@POINTER1	.스텍 값 초기화	
 	
-	TIX	CASE
+	RSUB
+
+POP2	LDA	POINTER2
+	SUB	#1
+	STA	POINTER2
+	LDA	#0	
+	LDCH	@POINTER2
+	STA	TMP2
+	LDX	TMP2
+	LDA	#0
+	STA	@POINTER2
 	
-	RSUB		
+	RSUB
 
 
+STG	BYTE	C'('
+FIG	BYTE	C')'
 TMPL	RESW	1
 TMPNUM	RESW	1
 ASEN	WORD	10
@@ -145,22 +258,21 @@ INDEV	BYTE	0
 OUTDEV	BYTE	1
 DATA	RESB	64
 TMP	RESW	1
+TMP2	RESW	1
 COL	RESW	1
 COLLM	RESW	1
 MATLM	RESW	1
 NOWCOL	RESW	1
 NOWMAT	RESW	1
-STACK	RESW	64
+STACK1	RESB	64
+STACK2	RESB	64
 XTMP	RESW	1  
+FIRST	RESW	1
+SECOND	RESW	1
+THREE	RESW	1
+FOUR	RESW	1
+POINTER1	RESW	1
+POINTER2	RESW	1
 
-	STS	0
-SCAN3	TD	INDEV	
-	JEQ	SCAN2
-	RD	INDEV
-	STCH	DATA
-	STS	TMP
-	LDA	TMP
-	ADD	#1
-	STA	TMP
-	COMP	TEST
-	JLT	SCAN2
+
+FIN	LDA	#0
