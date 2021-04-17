@@ -13,6 +13,9 @@ ALG	LDX	#1
 	COMP	CASE
 	JEQ	PRINT .다음재귀 가는것도 생각
 	TIX	CASE	.case와 같다면 끝
+
+	LDA	#-1
+	+JSUB	PUSH1	.스텍에 종료값 입력
 	
 	LDA	#1	.a에 1을 넣음
 	STA	NOWCOL	.nowcol초기화
@@ -22,10 +25,13 @@ ALG	LDX	#1
 ALG1	+JSUB	POP1	.pop로 괄호나 숫자를 x레지스터에 넣음
 	LDX	TMP2	.x에 스텍상위값을 넣음
 	LDA	TMP2	.a에 스텍상위값을 넣음
-	COMP	STG	.스텍의 다음차례가 괄호와 같으면 프린트 후 다시 alg1로 가 pop 
-	JEQ	PRINT1	
-	COMP	FIG
-	JEQ	PRINT1
+	
+	COMP	#-1
+	JEQ	FIN
+	
+	COMP	#41	.닫는 괄호와 같을때
+	JEQ	PRINT2
+	
 	STA	FIRST	.first에 스텍상위값 넣음
 	
 	+JSUB	POP2	.collm, matlm 가져오기
@@ -45,7 +51,7 @@ ALG1	+JSUB	POP1	.pop로 괄호나 숫자를 x레지스터에 넣음
 
 ALG2	LDA	NOWMAT	.nowmat을 a에 넣음
 	COMP	MATLM	.matlm과 비교
-	JEQ	QUIT	.같다면 quit로
+	JEQ	PRINT3	.같다면 quit로
 
 	LDA	COLLM 
 	COMP	#1	.collm이 1이되면 재귀 종료/////
@@ -74,7 +80,9 @@ REPLUSE	LDA	NOWMAT	.a에 nowmat를 넣음
 	STA	TMP	.지금의 값 tmp에 넣기
 	JEQ	ALG2	.같다면 alg2로 가서 반복.
 
-	
+	LDA	MATLM
+	COMP	NOWMAT
+	JEQ	ALG1
 	
 	LDCH	STG
 	JSUB	PRINT1	.재귀발생시 '('출력
@@ -110,21 +118,29 @@ REPLUSE	LDA	NOWMAT	.a에 nowmat를 넣음
 	.+JSUB	PUSH1	
 
 
-	LDA	MATLM	
+	LDA	MATLM
+	DIV	#4	
 	+JSUB	PUSH2	.스텍에 matlm 추가
 	LDA	COLLM
+	DIV	#2
+	+JSUB	PUSH2	.스텍에 collm추가
+	LDA	MATLM
+	DIV	#4	
+	+JSUB	PUSH2	.스텍에 matlm 추가
+	LDA	COLLM
+	DIV	#2
 	+JSUB	PUSH2	.스텍에 collm추가
 	LDA	MATLM	
+	DIV	#4
 	+JSUB	PUSH2	.스텍에 matlm 추가
 	LDA	COLLM
+	DIV	#2
 	+JSUB	PUSH2	.스텍에 collm추가
 	LDA	MATLM	
+	DIV	#4
 	+JSUB	PUSH2	.스텍에 matlm 추가
 	LDA	COLLM
-	+JSUB	PUSH2	.스텍에 collm추가
-	LDA	MATLM	
-	+JSUB	PUSH2	.스텍에 matlm 추가
-	LDA	COLLM
+	DIV	#2
 	+JSUB	PUSH2	.스텍에 collm추가
 
 	J	ALG1	.리컬시브
@@ -132,15 +148,25 @@ REPLUSE	LDA	NOWMAT	.a에 nowmat를 넣음
 
 
 
-QUIT	JSUB	PRINT
-	RSUB
+QUIT	JSUB	PRINT3
+	
 
-PLUSE	STA	XTMP	.x값 xtmp에 저장
-	LDA	COL	.a에 col 저장
+PLUSE	STX	XTMP
+	LDA	XTMP	.x값 xtmp에 저장
+	SUB	#1
+	STA	XTMP	.1이 이미 증가한 상황이라 빼줌.
+	LDA	COLLM	.a에 collm 저장
 	SUB	#1	.1빼줌
-	ADD	XTMP	.col-1+xtmp
-	STA	XTMP	.입력
-	LDX	XTMP	.다시 x에 저장
+	STA	TMP3
+	LDA	COL
+	SUB	TMP3
+	ADD	XTMP
+	STA	XTMP	
+	LDX	XTMP
+	.SUB	XTMP	.col-1+xtmp
+	.ADD	COL	.입력
+	.STA	XTMP	.다시 x에 저장
+	.LDX	XTMP
 	LDA	#0
 	STA	NOWCOL
 	J	REPLUSE	.회귀
@@ -159,9 +185,8 @@ PRINT1	TD	OUTDEV
 
 PRINT2	TD	OUTDEV
 	JEQ	PRINT
-	LDA	FIG
 	WD	OUTDEV
-	RSUB
+	J	ALG1
 
 PRINT3	TD	OUTDEV
 	JEQ	PRINT
@@ -240,7 +265,7 @@ POP2	LDA	POINTER2
 	LDA	#0	
 	LDCH	@POINTER2
 	STA	TMP2
-	LDX	TMP2
+	.LDX	TMP2
 	LDA	#0
 	STA	@POINTER2
 	
@@ -256,16 +281,17 @@ CASE	RESW	1
 TEST	RESB	1
 INDEV	BYTE	0
 OUTDEV	BYTE	1
-DATA	RESB	64
+DATA	RESB	65
 TMP	RESW	1
 TMP2	RESW	1
+TMP3	RESW	1
 COL	RESW	1
 COLLM	RESW	1
 MATLM	RESW	1
 NOWCOL	RESW	1
 NOWMAT	RESW	1
-STACK1	RESB	64
-STACK2	RESB	64
+STACK1	RESB	65
+STACK2	RESB	65
 XTMP	RESW	1  
 FIRST	RESW	1
 SECOND	RESW	1
