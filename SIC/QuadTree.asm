@@ -43,7 +43,7 @@ ALG1	+JSUB	POP1	.pop로 괄호나 숫자를 x레지스터에 넣음
 	
 	STX	FIRST
 	LDA	#1
-	STA	NOWCOL	.owcol,nowmat 초기화
+	STA	NOWCOL	.cowcol,nowmat 초기화
 	STA	NOWMAT
 	LDCH	DATA,X
 	STA	TMP
@@ -163,10 +163,6 @@ PLUSE	STX	XTMP
 	ADD	XTMP
 	STA	XTMP	
 	LDX	XTMP
-	.SUB	XTMP	.col-1+xtmp
-	.ADD	COL	.입력
-	.STA	XTMP	.다시 x에 저장
-	.LDX	XTMP
 	LDA	#0
 	STA	NOWCOL
 	J	REPLUSE	.회귀
