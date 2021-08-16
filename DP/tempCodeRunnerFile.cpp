@@ -1,26 +1,29 @@
 #include <iostream>
-
 using namespace std;
+
 int main (void){
+    ios_base ::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     int num;
     cin>>num;
-    int res = 0;
-    int arr[1001]={0};
-    int dp[1001]={0};
-    for (int i = 0; i < num; i++)
-    {
-        cin >> arr[i];
-        for(int j = 0 ; j < i ; j++){
-            if(arr[i]>arr[j]){
-                dp[i] = max(dp[i],dp[j]);
-            }
-            
+    int res;
+    int temp = 0;
+    int arr[1000001]={-1001};
+    int dp[1000001]={0};
+    cin >> arr[0];
+    dp[0] = arr[0];
+    res = dp[0];
+    for(int i  = 1 ; i < num ; i++){
+        cin>>arr[i];
+        if(arr[i]+dp[i-1]<0){
+            dp[i] = arr[i];
         }
-        dp[i]+=1;
-        res = max(res,dp[i]);
-    }    
-    // for(int i = 0 ; i < num ; i++){
-    //     cout<<arr[i]<<' '<<dp[i]<<endl;
-    // }
+        else{
+            dp[i] = dp[i - 1] + arr[i];
+        }
+        res=max(res,dp[i]);
+    }
     cout<<res;
 }
+

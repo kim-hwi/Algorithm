@@ -16,12 +16,13 @@ int main (void){
     res = dp[0];
     for(int i  = 1 ; i < num ; i++){
         cin>>arr[i];
-        dp[i]=dp[i-1]+arr[i];
-        temp = 0;
-        for(int j = i ; j > 0 ; j--){
-            temp +=arr[j];
-            res = max(res,temp);
+        if(dp[i-1]<0){
+            dp[i] = arr[i];
         }
+        else{
+            dp[i] = dp[i - 1] + arr[i];
+        }
+        res=max(res,dp[i]);
     }
     cout<<res;
 }
