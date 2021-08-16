@@ -15,6 +15,8 @@ int main (void){
                 dp[i] = max(dp[i],dp[j]);
             }
             
+
+            
         }
         dp[i]+=1;
         res = max(res,dp[i]);
