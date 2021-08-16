@@ -14,9 +14,6 @@ int main (void){
             if(arr[i]>arr[j]){
                 dp[i] = max(dp[i],dp[j]);
             }
-            
-
-            
         }
         dp[i]+=1;
         res = max(res,dp[i]);
