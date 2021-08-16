@@ -1,6 +1,10 @@
 #include <iostream>
 using namespace std;
+
 int main (void){
+    ios_base ::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     int num;
     cin>>num;
     int res;
@@ -18,7 +22,6 @@ int main (void){
             temp +=arr[j];
             res = max(res,temp);
         }
-
     }
     cout<<res;
 }
