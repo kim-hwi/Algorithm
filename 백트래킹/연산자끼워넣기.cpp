@@ -59,9 +59,3 @@ int main (void){
 
     cout << mymin << endl<< mymax;
 }
-
-
-    // for (int i = 0; i < lenth; i++)
-    // {
-    //     cout<<num[i];
-    // }
